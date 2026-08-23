@@ -1,6 +1,7 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
+import { HouseBar } from "@/components/house-bar";
 import {
   ERROR_PRESETS,
   LAYOUTS,
@@ -357,7 +358,9 @@ export function ErrorStudio() {
   }
 
   return (
-    <div className="app-shell">
+    <>
+      <HouseBar product="Error Studio" />
+      <div className="app-shell">
       <header className="app-header">
         <a className="wordmark" href="#top" aria-label="Error Studio home">
           error<span>/</span>
@@ -583,6 +586,7 @@ export function ErrorStudio() {
           </div>
         </aside>
       </main>
-    </div>
+      </div>
+    </>
   );
 }
