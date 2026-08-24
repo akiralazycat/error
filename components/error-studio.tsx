@@ -1,7 +1,6 @@
 "use client";
 
 import { useEffect, useMemo, useState } from "react";
-import { HouseBar } from "@/components/house-bar";
 import {
   ERROR_PRESETS,
   LAYOUTS,
@@ -241,7 +240,7 @@ function buildHtmlCode(state: StudioState) {
   <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>${html(preset.code)} · ${html(state.title)}</title>
   <style>
-    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:${bg};color:${fg};font-family:Inter,ui-sans-serif,system-ui,sans-serif;padding:32px clamp(24px,5vw,72px);display:grid;grid-template-rows:auto 1fr}nav{display:flex;justify-content:space-between;font-size:14px}.content{align-self:center;max-width:680px;padding-bottom:8vh}.eyebrow{color:${preset.accent};font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}h1{margin:18px 0;font-size:clamp(42px,7vw,88px);line-height:.98;letter-spacing:-.055em}p.body{max-width:560px;font-size:17px;line-height:1.65;opacity:.68}.actions{display:flex;gap:10px;margin-top:32px;flex-wrap:wrap}a{display:inline-block;border-radius:999px;padding:13px 20px;text-decoration:none;font-weight:650}.primary{background:${fg};color:${bg}}.secondary{border:1px solid ${secondaryBorder};color:inherit}.note{margin-top:28px;font-size:13px;opacity:.54}code{display:inline-block;margin-top:10px;font-size:12px;opacity:.46}
+    *{box-sizing:border-box}body{margin:0;min-height:100vh;background:${bg};color:${fg};font-family:system-ui,-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,"Noto Sans","Helvetica Neue",Arial,sans-serif;padding:32px clamp(24px,5vw,72px);display:grid;grid-template-rows:auto 1fr}nav{display:flex;justify-content:space-between;font-size:14px}.content{align-self:center;max-width:680px;padding-bottom:8vh}.eyebrow{color:${preset.accent};font-size:13px;font-weight:700;letter-spacing:.08em;text-transform:uppercase}h1{margin:18px 0;font-size:clamp(42px,7vw,88px);line-height:.98;letter-spacing: 0}p.body{max-width:560px;font-size:17px;line-height:1.65;opacity:.68}.actions{display:flex;gap:10px;margin-top:32px;flex-wrap:wrap}a{display:inline-block;border-radius:999px;padding:13px 20px;text-decoration:none;font-weight:650}.primary{background:${fg};color:${bg}}.secondary{border:1px solid ${secondaryBorder};color:inherit}.note{margin-top:28px;font-size:13px;opacity:.54}code{display:inline-block;margin-top:10px;font-size:12px;opacity:.46}
   </style>
 </head>
 <body>
@@ -359,7 +358,6 @@ export function ErrorStudio() {
 
   return (
     <>
-      <HouseBar product="Error Studio" />
       <div className="app-shell">
       <header className="app-header">
         <a className="wordmark" href="#top" aria-label="Error Studio home">
