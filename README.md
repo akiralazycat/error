@@ -15,18 +15,25 @@ A recovery-first error page design tool. Error Studio treats failure states as p
 
 ## Run locally
 
+Use Node.js 22 and npm from the repository root. This repository installs from `package.json`.
+
 ```bash
-npm install
+npm install --no-package-lock
 npm run dev
 ```
 
 Open `http://localhost:3000`.
 
-## Build
+## Quality checks
 
 ```bash
+npm run lint
 npm run build
 ```
+
+Run both commands locally for code changes. `lint` runs ESLint and `build` checks TypeScript and produces the Next.js build. GitHub Actions history is available under [Actions](https://github.com/akiralazycat/error/actions).
+
+For changes to the editor, open a preset, edit a message, and reload to confirm the draft returns. Use Reset to restore the defaults, then verify the preview and the generated Next.js, HTML and JSON exports.
 
 ## Design principle
 
