@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useState, useSyncExternalStore } from "react";
 import { HouseBar } from "@/components/house-bar";
 import {
   ERROR_PRESETS,
@@ -261,31 +261,53 @@ function buildHtmlCode(state: StudioState) {
 </html>`;
 }
 
+const storageKey = "error-studio:v1";
+
+function readSavedDraft() {
+  try {
+    return window.localStorage.getItem(storageKey);
+  } catch {
+    return null;
+  }
+}
+
+function subscribeToSavedDraft(onChange: () => void) {
+  function handleStorage(event: StorageEvent) {
+    if (event.key === storageKey || event.key === null) onChange();
+  }
+
+  window.addEventListener("storage", handleStorage);
+  return () => window.removeEventListener("storage", handleStorage);
+}
+
+function restoreDraft(saved: string | null): StudioState {
+  const defaults = createInitialState();
+  if (!saved) return defaults;
+
+  try {
+    return { ...defaults, ...JSON.parse(saved) };
+  } catch {
+    return defaults;
+  }
+}
+
 export function ErrorStudio() {
-  const [state, setState] = useState<StudioState>(() => createInitialState());
+  const saved = useSyncExternalStore(subscribeToSavedDraft, readSavedDraft, () => null);
+  const savedDraft = useMemo(() => restoreDraft(saved), [saved]);
+  const [draft, setDraft] = useState<StudioState | null>(null);
+  const state = draft ?? savedDraft;
   const [device, setDevice] = useState<Device>("desktop");
   const [exportMode, setExportMode] = useState<ExportMode>("next");
   const [copied, setCopied] = useState(false);
-  const [hydrated, setHydrated] = useState(false);
 
   useEffect(() => {
+    if (!draft) return;
     try {
-      const saved = localStorage.getItem("error-studio:v1");
-      if (saved) setState({ ...createInitialState(), ...JSON.parse(saved) });
-    } catch {
-      // A corrupted or unavailable local store should never block the studio.
-    }
-    setHydrated(true);
-  }, []);
-
-  useEffect(() => {
-    if (!hydrated) return;
-    try {
-      localStorage.setItem("error-studio:v1", JSON.stringify(state));
+      window.localStorage.setItem(storageKey, JSON.stringify(draft));
     } catch {
       // Persistence is a convenience, not a requirement.
     }
-  }, [hydrated, state]);
+  }, [draft]);
 
   const preset = getPreset(state.presetId);
   const score = useMemo(() => {
@@ -326,7 +348,7 @@ export function ErrorStudio() {
   }, [exportMode, preset.code, preset.label, state]);
 
   function patch(patchState: Partial<StudioState>) {
-    setState((current) => ({ ...current, ...patchState }));
+    setDraft((current) => ({ ...(current ?? savedDraft), ...patchState }));
   }
 
   function applyPreset(id: string) {
@@ -352,7 +374,7 @@ export function ErrorStudio() {
   }
 
   function reset() {
-    setState(createInitialState());
+    setDraft(createInitialState());
     setDevice("desktop");
     setExportMode("next");
   }
